@@ -3,8 +3,6 @@ import { changeWidth, changeHeight } from "./store/dimensionSlice"
 
 function App() {
     const dispatch = useAppDispatch()
-    const height:number = useAppSelector(state => state.dimensions.height)
-    const width: number = useAppSelector(state => state.dimensions.width)
     window.addEventListener('resize', () => {
         dispatch(changeHeight())
     })
@@ -17,8 +15,6 @@ function App() {
     return (
     <>
             <h1>My Dashboard</h1>
-            <p>Current Height: {height}</p>
-            <p>Current Width: {width} </p>
     </>
   )
 }
