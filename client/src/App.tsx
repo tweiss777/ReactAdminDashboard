@@ -16,7 +16,6 @@ function App() {
 
     return (
     <>
-            <h1>My Dashboard</h1>
             <RouterProvider router={router} />
     </>
   )
