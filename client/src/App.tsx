@@ -1,24 +1,33 @@
-import { useAppDispatch } from "./store/storeHooks"
-import { changeWidth, changeHeight } from "./store/dimensionSlice"
-import { RouterProvider } from "react-router-dom"
-import router from "./routes/routes"
-import React from "react"
+import { useAppDispatch } from "./store/storeHooks";
+import { changeWidth, changeHeight } from "./store/dimensionSlice";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { NavBar } from "./Components/Navbar";
+import Users from "./Components/Users";
+import Affiliates from "./Components/Affiliates";
+import CreditLog from "./Components/CreditLog";
 function App() {
-    const dispatch = useAppDispatch()
-    window.addEventListener('resize', () => {
-        dispatch(changeHeight())
-    })
+    const dispatch = useAppDispatch();
 
-    window.addEventListener('resize', () => {
-        dispatch(changeWidth())
-    })
+    window.addEventListener("resize", () => {
+        dispatch(changeHeight());
+    });
 
+    window.addEventListener("resize", () => {
+        dispatch(changeWidth());
+    });
 
     return (
-    <>
-            <RouterProvider router={router} />
-    </>
-  )
+        <>
+            <BrowserRouter>
+                <NavBar />
+                <Routes>
+                    <Route path="/" element={<Users />} />
+                    <Route path="/affiliates" element={<Affiliates />} />
+                    <Route path="/credits" element={<CreditLog />} />
+                </Routes>
+            </BrowserRouter>
+        </>
+    );
 }
 
-export default App
+export default App;
