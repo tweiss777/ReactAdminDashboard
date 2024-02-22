@@ -1,3 +1,24 @@
-.users-table{
+.users-table {
     margin: auto 20px;
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .search-bar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .users-table {
+        .header {
+            margin-bottom: 10px;
+            flex-direction: column;
+        }
+    }
 }

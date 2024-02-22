@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { getUsers } from "../services/users.service";
 import { User } from "../types/Users";
-import { Table, Alert } from "antd";
+import { Table, Alert, Input } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import type { TableProps } from "antd";
 import "../scss/Users.scss";
 
@@ -9,7 +10,7 @@ export default function Users() {
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [hasError, setHasError] = useState<boolean>(false);
-
+    const [name, setName] = useState<string>("");
     const columns: TableProps<User>["columns"] = [
         {
             title: "id",
@@ -74,7 +75,16 @@ export default function Users() {
                 <Alert type={"error"} message={"Error Loading Data"} />
             ) : (
                 <div className="users-table">
-                    <h1>Users</h1>
+                    <div className="header">
+                        <h1>Users</h1>
+                        <div className="search-bar">
+                            <Input
+                                onChange={(event) => setName(event.currentTarget.value)}
+                                addonBefore={<SearchOutlined />}
+                                placeholder="Search By Name"
+                            />
+                        </div>
+                    </div>
                     <Table
                         onRow={onRow}
                         scroll={{ x: true }}
