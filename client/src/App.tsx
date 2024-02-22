@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { NavBar } from "./Components/Navbar";
 import Users from "./Components/Users";
 import Affiliates from "./Components/Affiliates";
+import CreditLog from "./Components/CreditLog";
 function App() {
     const dispatch = useAppDispatch();
 
@@ -22,7 +23,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Users />} />
                     <Route path="/affiliates" element={<Affiliates />} />
-                    <Route path="/credits" element={<h1>Credits</h1>}
+                    <Route path="/credits" element={<CreditLog />} />
                 </Routes>
             </BrowserRouter>
         </>
