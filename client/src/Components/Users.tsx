@@ -124,12 +124,6 @@ export default function Users() {
         fetchUsers();
     }, []);
 
-    const onRow = (_record: any, _rowIndex: any) => ({
-        onClick: (event: any) => {
-            console.log(event);
-        },
-    });
-
     return (
         <>
             {hasError ? (
@@ -147,7 +141,6 @@ export default function Users() {
                         </div>
                     </div>
                     <Table
-                        onRow={onRow}
                         scroll={{ x: true }}
                         size={"large"}
                         pagination={{ pageSize: 10, position: ["bottomLeft"] }}
