@@ -4,28 +4,31 @@ import { User } from "../types/Users";
 import { Table, Alert, Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { TableProps } from "antd";
+import { useSearchParams } from "react-router-dom";
 import "../scss/Users.scss";
-
 export default function Users() {
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [hasError, setHasError] = useState<boolean>(false);
     const [name, setName] = useState<string>("");
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    function onColClick(record: User) {
+        const { id } = record;
+        const urlSearchParams = new URLSearchParams();
+        urlSearchParams.set("id", id.toString());
+        setSearchParams(urlSearchParams);
+    }
     const columns: TableProps<User>["columns"] = [
         {
             title: "id",
             dataIndex: "id",
             key: "id",
-            onCell: (record, row) => {
+            onCell: (record, _row) => {
                 return {
-                    onClick: (e) => {
-                        console.log(record)
-                        console.log(row)
-
-                    }
-                }
-
-            }
+                    onClick: () => onColClick(record),
+                };
+            },
         },
 
         {
@@ -33,78 +36,53 @@ export default function Users() {
             dataIndex: "firstName",
             key: "firstName",
 
-            onCell: (record, row) => {
+            onCell: (record, _row) => {
                 return {
-                    onClick: (e) => {
-                        console.log(record)
-                        console.log(row)
-
-                    }
-                }
-
-            }
+                    onClick: () => onColClick(record),
+                };
+            },
         },
         {
             title: "Last Name",
             dataIndex: "lastName",
             key: "lastName",
-            onCell: (record, row) => {
+            onCell: (record, _row) => {
                 return {
-                    onClick: () => {
-                        console.log(record)
-                        console.log(row)
-
-                    }
-                }
-
-            }
+                    onClick: () => onColClick(record),
+                };
+            },
         },
         {
             title: "Email",
             dataIndex: "email",
             key: "email",
-            onCell: (record, row) => {
+            onCell: (record, _row) => {
                 return {
-                    onClick: () => {
-                        console.log(record)
-                        console.log(row)
-
-                    }
-                }
-
-            }
+                    onClick: () => onColClick(record),
+                };
+            },
         },
 
         {
             title: "Address",
             dataIndex: "address",
             key: "address",
-            onCell: (record, row) => {
+            onCell: (record, _row) => {
                 return {
-                    onClick: () => {
-                        console.log(record)
-                        console.log(row)
-
-                    }
-                }
-
-            }
+                    onClick: () => onColClick(record),
+                };
+            },
         },
 
         {
             title: "IP Address",
             dataIndex: "ipAddress",
             key: "ipAddress",
-            onCell: (record, row) => {
+            onCell: (record, _row) => {
                 return {
-                    onClick: () => {
-                        console.log(record)
-                        console.log(row)
-
-                    }
-                }
-
-            }
+                    onClick: () => onColClick(record),
+                };
+            },
         },
     ];
 
