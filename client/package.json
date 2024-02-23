@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fastify/cors": "^9.0.1",
     "@reduxjs/toolkit": "^2.2.1",
+    "@types/node": "^20.11.20",
     "antd": "^5.14.1",
+    "dotenv": "^16.4.5",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
     "react": "^18.2.0",
