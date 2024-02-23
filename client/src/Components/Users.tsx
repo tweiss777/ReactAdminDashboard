@@ -16,34 +16,95 @@ export default function Users() {
             title: "id",
             dataIndex: "id",
             key: "id",
+            onCell: (record, row) => {
+                return {
+                    onClick: (e) => {
+                        console.log(record)
+                        console.log(row)
+
+                    }
+                }
+
+            }
         },
 
         {
             title: "First Name",
             dataIndex: "firstName",
             key: "firstName",
+
+            onCell: (record, row) => {
+                return {
+                    onClick: (e) => {
+                        console.log(record)
+                        console.log(row)
+
+                    }
+                }
+
+            }
         },
         {
             title: "Last Name",
             dataIndex: "lastName",
             key: "lastName",
+            onCell: (record, row) => {
+                return {
+                    onClick: () => {
+                        console.log(record)
+                        console.log(row)
+
+                    }
+                }
+
+            }
         },
         {
             title: "Email",
             dataIndex: "email",
             key: "email",
+            onCell: (record, row) => {
+                return {
+                    onClick: () => {
+                        console.log(record)
+                        console.log(row)
+
+                    }
+                }
+
+            }
         },
 
         {
             title: "Address",
             dataIndex: "address",
             key: "address",
+            onCell: (record, row) => {
+                return {
+                    onClick: () => {
+                        console.log(record)
+                        console.log(row)
+
+                    }
+                }
+
+            }
         },
 
         {
             title: "IP Address",
             dataIndex: "ipAddress",
             key: "ipAddress",
+            onCell: (record, row) => {
+                return {
+                    onClick: () => {
+                        console.log(record)
+                        console.log(row)
+
+                    }
+                }
+
+            }
         },
     ];
 
