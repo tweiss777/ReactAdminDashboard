@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "commonjs",
   "license": "MIT",
   "dependencies": {
     "@fastify/cors": "^9.0.1",
@@ -10,6 +10,8 @@
   },
   "scripts": {
     "start": "ts-node src/main.ts",
+    "watch": "tsc -w",
+    "dev": "nodemon -e ts -w src -x \"node --inspect -r ts-node/register src/main.ts\"",
     "build": "tsc -b",
     "test": "jest --detectOpenHandles"
   },
