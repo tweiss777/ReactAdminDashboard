@@ -1,5 +1,5 @@
 import { User } from "../types/Users";
-
+import axios from 'axios'
 const mockData = [
     {
         id: 1,
@@ -41,11 +41,10 @@ const mockData = [
         ipAddress: "105.204.140.32",
         address: "4030 Hudson Alley",
     }
-];
+]
 export async function getUsers(): Promise<User[]> {
-    return new Promise<User[]>((resolve, _reject) => {
-        resolve(mockData);
-    });
+    const { data: {data} }  = await axios.get('api/v1/users')
+    return data as User[]
 }
 
 export async function getUser(name: string): Promise<User[]> {
