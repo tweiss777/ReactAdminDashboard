@@ -8,7 +8,7 @@ const { PORT: port } = process.env;
 const fastify: FastifyInstance = Fastify();
 
 fastify.register(cors);
-fastify.register(userRoutes, { prefix: '/v1/users' });
+fastify.register(userRoutes, { prefix: 'api/v1/users' });
 
 
 fastify.setErrorHandler((error: FastifyError, req: FastifyRequest, reply: FastifyReply) => {
