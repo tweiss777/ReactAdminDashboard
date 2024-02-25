@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getUsers } from "../services/users.service";
 import { User as IUser } from "../types/Users";
-import User from './User'
-import { Table, Alert, Input } from "antd";
+import User from "./User";
+import { Table, Alert, Input, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { TableProps } from "antd";
 import { useSearchParams } from "react-router-dom";
@@ -13,14 +13,21 @@ export default function Users() {
     const [hasError, setHasError] = useState<boolean>(false);
     const [name, setName] = useState<string>("");
     const [searchParams, setSearchParams] = useSearchParams();
-    const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
+    const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+    const currentRouteId: string | null = useMemo<string | null>(
+        () => searchParams.get("id"),
+        [searchParams],
+    );
     function onColClick(record: IUser) {
         const { id } = record;
         const urlSearchParams = new URLSearchParams();
         urlSearchParams.set("id", id.toString());
         setSearchParams(urlSearchParams);
-        setSelectedUser(record)
-        
+        setSelectedUser(record);
+    }
+    function onPageChange(page: number, pageSize: number) {
+        console.log(`page ${page}`);
+        console.log(`page size ${pageSize}`);
     }
     const columns: TableProps<IUser>["columns"] = [
         {
@@ -97,9 +104,7 @@ export default function Users() {
             } catch (error) {
                 setHasError(true);
             } finally {
-                setTimeout(() => {
-                    setIsLoading(false);
-                }, 5000);
+                setIsLoading(false);
             }
         };
         fetchUsers();
@@ -107,33 +112,37 @@ export default function Users() {
 
     return (
         <>
-                {hasError ? (
-                    <Alert type={"error"} message={"Error Loading Data"} />
-                ) : (
-                    <div className="users-table">
-                        <div className="header">
-                            <h1>Users</h1>
-                            <div className="search-bar">
-                                <Input
-                                    onChange={(event) => setName(event.currentTarget.value)}
-                                    addonBefore={<SearchOutlined />}
-                                    placeholder="Search By Name"
-                                />
-                            </div>
+            {hasError ? (
+                <Alert type={"error"} message={"Error Loading Data"} />
+            ) : (
+                <div className="users-table">
+                    <div className="header">
+                        <h1>Users</h1>
+                        <div className="search-bar">
+                            <Input
+                                onChange={(event) => setName(event.currentTarget.value)}
+                                addonBefore={<SearchOutlined />}
+                                placeholder="Search By Name"
+                            />
                         </div>
-                        <Table
-                            scroll={{ x: true }}
-                            size={"large"}
-                            pagination={{ pageSize: 10, position: ["bottomLeft"] }}
-                            columns={columns}
-                            loading={isLoading}
-                            dataSource={users}
-                            bordered={true}
-                        />
-
-                    {(searchParams.get('id') && selectedUser)  && <User user={selectedUser}/>}
                     </div>
-                )}
+                    <Table
+                        scroll={{ x: true }}
+                        size={"large"}
+                        columns={columns}
+                        loading={isLoading}
+                        dataSource={users}
+                        bordered={true}
+                    />
+                    <Pagination
+                        total={500}
+                        pageSize={10}
+                        onChange={onPageChange}
+                    />
+
+                    {currentRouteId && selectedUser && <User user={selectedUser} />}
+                </div>
+            )}
         </>
     );
 }
