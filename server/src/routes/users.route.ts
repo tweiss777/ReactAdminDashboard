@@ -1,8 +1,6 @@
-import { FastifyInstance } from 'fastify'
+import { FastifyInstance, FastifyPluginOptions } from 'fastify'
+import { getUsers } from '../controllers/user.controller'
 
-
-export default async function userRoutes(fastify: FastifyInstance, options) {
-    fastify.get('/', (req, reply) => {
-            reply.status(200).send({ message: "Not Implemented" })
-        })
+export default async function userRoutes(fastify: FastifyInstance, _options: FastifyPluginOptions ) {
+    fastify.get('/', getUsers)
     }
