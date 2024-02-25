@@ -21,3 +21,16 @@ export async function getUsers(_req: FastifyRequest, reply: FastifyReply) {
         throw error
     }
 }
+export async function getUserCount(_req: FastifyRequest, reply: FastifyReply){
+    try {
+        const query: string = "SELECT COUNT(id) AS total_users FROM Users;"
+        const result: {count: number[]}[] = await execute(query)
+        const responseDto:responseDTO<{count: number[]}> = {
+            status: 200,
+            data: result[0]
+        }
+        return reply.status(200).send(responseDto)
+    } catch (error) {
+        throw error
+    }
+}
