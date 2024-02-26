@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import { getUsers } from "../services/users.service";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { getUsers, getUserCount } from "../services/users.service";
 import { User as IUser } from "../types/Users";
 import User from "./User";
 import { Table, Alert, Input, Pagination } from "antd";
@@ -14,6 +14,7 @@ export default function Users() {
     const [name, setName] = useState<string>("");
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+    const totalUsers: React.MutableRefObject<number>  = useRef<number>(0);
     const currentRouteId: string | null = useMemo<string | null>(
         () => searchParams.get("id"),
         [searchParams],
@@ -25,9 +26,9 @@ export default function Users() {
         setSearchParams(urlSearchParams);
         setSelectedUser(record);
     }
-    function onPageChange(page: number, pageSize: number) {
-        console.log(`page ${page}`);
-        console.log(`page size ${pageSize}`);
+    async function onPageChange(page: number, _pageSize: number) {
+        const results = await getUsers(page)
+        setUsers(results)
     }
     const columns: TableProps<IUser>["columns"] = [
         {
@@ -99,8 +100,12 @@ export default function Users() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const users: IUser[] = await getUsers();
+                const [users, totalCount]: [IUser[], number] = await Promise.all([
+                    getUsers(),
+                    getUserCount(),
+                ]);
                 setUsers(users);
+                totalUsers.current = totalCount;
             } catch (error) {
                 setHasError(true);
             } finally {
@@ -114,7 +119,7 @@ export default function Users() {
         <>
             {hasError ? (
                 <Alert type={"error"} message={"Error Loading Data"} />
-            ) : (
+                ) : (
                 <div className="users-table">
                     <div className="header">
                         <h1>Users</h1>
@@ -134,11 +139,7 @@ export default function Users() {
                         dataSource={users}
                         bordered={true}
                     />
-                    <Pagination
-                        total={500}
-                        pageSize={10}
-                        onChange={onPageChange}
-                    />
+                    <Pagination total={totalUsers.current} pageSize={10} onChange={onPageChange} />
 
                     {currentRouteId && selectedUser && <User user={selectedUser} />}
                 </div>
