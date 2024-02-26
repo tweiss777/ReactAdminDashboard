@@ -26,6 +26,11 @@ export default function Users() {
         setSearchParams(urlSearchParams);
         setSelectedUser(record);
     }
+    function closeUserForm(){
+        const urlSearchParams = new URLSearchParams();
+        urlSearchParams.delete('id')
+        setSearchParams(urlSearchParams);
+    }
     async function onPageChange(page: number, _pageSize: number) {
         const results = await getUsers(page)
         setUsers(results)
@@ -142,7 +147,7 @@ export default function Users() {
                     />
                     <Pagination total={totalUsers.current} pageSize={10} onChange={onPageChange} />
 
-                        {currentRouteId && selectedUser && <div className="users-container"><User user={selectedUser} /> </div>}
+                        {currentRouteId && selectedUser && <div className="users-container"><User onClose={closeUserForm} user={selectedUser} /> </div>}
                 </div>
             )}
         </>
