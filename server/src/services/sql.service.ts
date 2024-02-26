@@ -8,14 +8,14 @@ const {
     DB: db,
 } = process.env;
 
-export default async function execute<T>(query: string) {
+export default async function execute<T>(query: string, args?: any[]) {
     const connection: mysql2.Connection = await mysql2.createConnection({
         host: dbHost,
         user: dbUser,
         password: dbPassword,
         database: db,
     });
-    const [results] = await connection.execute(query);
+    const [results] = await connection.execute(query, args);
     await connection.end();
     return results as T;
 }
