@@ -133,6 +133,7 @@ export default function Users() {
                     </div>
                     <Table
                         scroll={{ x: true }}
+                        pagination={false}
                         size={"large"}
                         columns={columns}
                         loading={isLoading}
@@ -141,7 +142,7 @@ export default function Users() {
                     />
                     <Pagination total={totalUsers.current} pageSize={10} onChange={onPageChange} />
 
-                    {currentRouteId && selectedUser && <User user={selectedUser} />}
+                        {currentRouteId && selectedUser && <div className="users-container"><User user={selectedUser} /> </div>}
                 </div>
             )}
         </>
