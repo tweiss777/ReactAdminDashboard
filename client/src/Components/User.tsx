@@ -29,12 +29,12 @@ export default function User({ user, onClose, onUpdate }: IProps) {
     }
     async function updateUser(){
         try {
-            setSaving(!saving)
+            setSaving(true)
             await onUpdate<IUser>(userState) 
         } catch (error) {
             
         } finally{
-            setSaving(!saving)
+            setSaving(false)
         }
     }
     return (
