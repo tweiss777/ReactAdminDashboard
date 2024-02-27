@@ -1,7 +1,7 @@
 import { User } from "../types/Users";
 import axios from 'axios'
 export async function getUsers(pageNumber?: number): Promise<User[]> {
-   const { data: {data} }  = await axios.get(`api/v1/users/${pageNumber}`)
+   const { data: {data} }  = await axios.get(`api/v1/users/${pageNumber ?? 1}`)
     return data as User[]
 }
 
