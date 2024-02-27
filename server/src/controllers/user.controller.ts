@@ -3,6 +3,7 @@ import execute from "../services/sql.service";
 import calculatePaginationOffset from "../utils/calculatePaginateOffset";
 import User from "../types/User";
 import { FastifyRequest, FastifyReply } from "fastify";
+import { Query } from "mysql2/typings/mysql/lib/protocol/sequences/Query";
 
 export async function getUsers(req: FastifyRequest<{Params: {page_number: string}}>, reply: FastifyReply) {
     try {
@@ -59,3 +60,26 @@ export async function updateUser(req: FastifyRequest<{Body: {user: User}, Params
     }
 }
 
+export async function getUser(req: FastifyRequest<{Querystring: {first_name: string, page_number: string }}>, reply: FastifyReply){
+    try {
+ 
+        const name = req.query.first_name
+        const page_number = req.query.page_number; 
+        const pageNumber = parseInt(page_number) >= 1 ? parseInt(page_number) : 1;
+        const offset = calculatePaginationOffset(pageNumber).toString();
+        if(!name){
+            throw new Error("first name required")
+        }
+        const query: string = "SELECT id, first_name AS firstName, last_name AS lastName, email, ip_address AS ipAddress, address FROM Users WHERE first_name LIKE CONCAT(?,'%') LIMIT 10 OFFSET ?;" 
+        const result: User = await execute<User>(query, [name, offset]);
+        const responseDto: responseDTO<User> = {
+            status: 200,
+            data: result
+        }
+        reply.status(200).send(responseDto)
+        
+    } catch (error) {
+        throw error
+        
+    }
+}
