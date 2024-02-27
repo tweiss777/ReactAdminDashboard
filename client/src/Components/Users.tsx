@@ -51,10 +51,7 @@ export default function Users() {
             
         } catch (error) {
             setHasError(true)
-        } finally{
-            
-        }
-
+        } 
     }
 
     const columns: TableProps<IUser>["columns"] = [
