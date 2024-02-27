@@ -7,6 +7,7 @@
     .close-btn-container {
         text-align: center;
         .close-btn {
+            margin-right: 5px;
             color: #FFFFFF;
             background-color: #ad0000;
             &:hover{
@@ -15,6 +16,14 @@
                 border-color: #ad0000;
             }
 
+        }
+        .save-btn{
+            &:hover{
+                border-color: #1677ff;
+                background-color: #FFFFFF;
+                color: #1677ff;
+            
+            }
         }
     }
 }
