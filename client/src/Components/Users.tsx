@@ -14,7 +14,8 @@ export default function Users() {
     const [name, setName] = useState<string>("");
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
-    const totalUsers: React.MutableRefObject<number>  = useRef<number>(0);
+    const [saveSuccesful, setSaveSuccesful] = useState<boolean>(false);
+    const totalUsers: React.MutableRefObject<number> = useRef<number>(0);
     const currentRouteId: string | null = useMemo<string | null>(
         () => searchParams.get("id"),
         [searchParams],
@@ -26,15 +27,23 @@ export default function Users() {
         setSearchParams(urlSearchParams);
         setSelectedUser(record);
     }
-    function closeUserForm(){
+    function closeUserForm() {
         const urlSearchParams = new URLSearchParams();
-        urlSearchParams.delete('id')
+        urlSearchParams.delete("id");
         setSearchParams(urlSearchParams);
     }
     async function onPageChange(page: number, _pageSize: number) {
-        const results = await getUsers(page)
-        setUsers(results)
+        const results = await getUsers(page);
+        setUsers(results);
     }
+
+    async function saveUser(user: IUser) {
+        return new Promise((resolve, _reject) => {
+            setSaveSuccesful(!saveSuccesful);
+            resolve("user succesfully updated");
+        });
+    }
+
     const columns: TableProps<IUser>["columns"] = [
         {
             title: "id",
@@ -122,9 +131,12 @@ export default function Users() {
 
     return (
         <>
+            {saveSuccesful && (
+                <Alert type={"success"} message={"User updated succesfully"} />
+            )}
             {hasError ? (
                 <Alert type={"error"} message={"Error Loading Data"} />
-                ) : (
+            ) : (
                 <div className="users-table">
                     <div className="header">
                         <h1>Users</h1>
@@ -145,9 +157,17 @@ export default function Users() {
                         dataSource={users}
                         bordered={true}
                     />
-                    <Pagination total={totalUsers.current} pageSize={10} onChange={onPageChange} />
+                    <Pagination
+                        total={totalUsers.current}
+                        pageSize={10}
+                        onChange={onPageChange}
+                    />
 
-                        {currentRouteId && selectedUser && <div className="users-container"><User onClose={closeUserForm} user={selectedUser} /> </div>}
+                    {currentRouteId && selectedUser && (
+                        <div className="users-container">
+                            <User onUpdate={saveUser} onClose={closeUserForm} user={selectedUser} />{" "}
+                        </div>
+                    )}
                 </div>
             )}
         </>
