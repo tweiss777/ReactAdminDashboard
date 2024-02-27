@@ -4,10 +4,10 @@ import calculatePaginationOffset from "../utils/calculatePaginateOffset";
 import User from "../types/User";
 import { FastifyRequest, FastifyReply } from "fastify";
 
-export async function getUsers(req: FastifyRequest, reply: FastifyReply) {
+export async function getUsers(req: FastifyRequest<{Params: {page_number: string}}>, reply: FastifyReply) {
     try {
-        let { page_number: pageNumber } = req.params as any;
-        pageNumber = pageNumber >= 1 ? parseInt(pageNumber) : 1;
+        let { page_number} = req.params; 
+        const pageNumber = parseInt(page_number) >= 1 ? parseInt(page_number) : 1;
         const offset = calculatePaginationOffset(pageNumber).toString();
         const query: string =
             'SELECT id, first_name AS firstName, last_name AS lastName, email, ip_address AS ipAddress, address FROM Users LIMIT 10 OFFSET ?';
