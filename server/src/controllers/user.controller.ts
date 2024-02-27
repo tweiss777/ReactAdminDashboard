@@ -1,5 +1,6 @@
 import responseDTO from "../dtos/responseDTO";
 import execute from "../services/sql.service";
+import calculatePaginationOffset from "../utils/calculatePaginateOffset";
 import User from "../types/User";
 import { FastifyRequest, FastifyReply } from "fastify";
 
@@ -7,7 +8,7 @@ export async function getUsers(req: FastifyRequest, reply: FastifyReply) {
     try {
         let { page_number: pageNumber } = req.params as any;
         pageNumber = pageNumber >= 1 ? parseInt(pageNumber) : 1;
-        const offset = ((pageNumber - 1) * 10).toString();
+        const offset = calculatePaginationOffset(pageNumber).toString();
         const query: string =
             'SELECT id, first_name AS firstName, last_name AS lastName, email, ip_address AS ipAddress, address FROM Users LIMIT 10 OFFSET ?';
         const result: User = await execute<User>(query, [offset]);
@@ -22,6 +23,7 @@ export async function getUsers(req: FastifyRequest, reply: FastifyReply) {
         throw error;
     }
 }
+
 export async function getUserCount(_req: FastifyRequest, reply: FastifyReply) {
     try {
         const query: string = "SELECT COUNT(id) AS total_users FROM Users;";
@@ -35,3 +37,4 @@ export async function getUserCount(_req: FastifyRequest, reply: FastifyReply) {
         throw error;
     }
 }
+
