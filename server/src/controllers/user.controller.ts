@@ -3,7 +3,6 @@ import execute from "../services/sql.service";
 import User from "../types/User";
 import { FastifyRequest, FastifyReply } from "fastify";
 
-// refactor query to handle pagination
 export async function getUsers(req: FastifyRequest, reply: FastifyReply) {
     try {
         let { page_number: pageNumber } = req.params as any;
