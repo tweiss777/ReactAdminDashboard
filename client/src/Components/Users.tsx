@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { getUsers, getUserCount } from "../services/users.service";
+import { getUsers, getUserCount, updateUser } from "../services/users.service";
 import { User as IUser } from "../types/Users";
 import User from "./User";
 import { Table, Alert, Input, Pagination } from "antd";
@@ -37,11 +37,24 @@ export default function Users() {
         setUsers(results);
     }
 
-    async function saveUser(user: IUser) {
-        return new Promise((resolve, _reject) => {
-            setSaveSuccesful(!saveSuccesful);
-            resolve("user succesfully updated");
-        });
+    async function saveUser(userToUpdate: IUser) { 
+        try {
+            setHasError(false)
+            const rowsChanged: number = await updateUser(userToUpdate)
+            if(rowsChanged > 0){
+                setSaveSuccesful(true)
+                const updatedIndex = users.findIndex(user => user.id === userToUpdate.id)
+                const updatedUsers = [...users]
+                updatedUsers[updatedIndex] = {...userToUpdate}
+                setUsers(updatedUsers)
+            }
+            
+        } catch (error) {
+            setHasError(true)
+        } finally{
+            
+        }
+
     }
 
     const columns: TableProps<IUser>["columns"] = [
