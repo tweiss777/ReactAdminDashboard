@@ -38,3 +38,21 @@ export async function getUserCount(_req: FastifyRequest, reply: FastifyReply) {
     }
 }
 
+
+export async function updateUser(req: FastifyRequest<{Body: {user: User}, Params: {id: string}}>, reply: FastifyReply){
+    try {
+        const { user: {firstName, lastName, email, address}} = req.body
+        const { id } = req.params 
+        const query = "UPDATE Users SET first_name=?, last_name=?, email=?, address=? WHERE id=?;"
+        const results = await execute(query,[firstName, lastName, email, address, id])
+        const responseDto: responseDTO<any> = {
+            status: 200,
+            data: results
+        }
+        reply.status(200).send(responseDto)
+        
+    } catch (error) {
+       throw error
+    }
+}
+
