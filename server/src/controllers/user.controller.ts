@@ -43,6 +43,9 @@ export async function updateUser(req: FastifyRequest<{Body: {user: User}, Params
     try {
         const { user: {firstName, lastName, email, address}} = req.body
         const { id } = req.params 
+        if(!id){
+            throw new Error('id is missing')
+        }
         const query = "UPDATE Users SET first_name=?, last_name=?, email=?, address=? WHERE id=?;"
         const results = await execute(query,[firstName, lastName, email, address, id])
         const responseDto: responseDTO<any> = {
