@@ -1,0 +1,35 @@
+.user-card {
+    border: solid 1px #000000;
+    width: 500px;
+    box-shadow: 12px 22px 42px 1px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 12px 22px 42px 1px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 12px 22px 42px 1px rgba(0, 0, 0, 0.75);
+    .close-btn-container {
+        text-align: center;
+        .close-btn {
+            margin-right: 5px;
+            color: #FFFFFF;
+            background-color: #ad0000;
+            &:hover{
+                 
+                color: #ad0000;
+                border-color: #ad0000;
+            }
+
+        }
+        .save-btn{
+            &:hover{
+                border-color: #1677ff;
+                background-color: #FFFFFF;
+                color: #1677ff;
+            
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .user-card {
+        width: 100%;
+    }
+}
