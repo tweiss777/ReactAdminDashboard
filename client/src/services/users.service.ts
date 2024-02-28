@@ -21,7 +21,6 @@ export async function updateUser(user: User) {
 export async function getUsers(pageNumber: number = 1,name: string=''): Promise<User[]> {
     const fetchUsers = debounce(async (name: string, pageNumber: number) => {
         const {data: { data }} = await axios.get(`/api/v1/users?first_name=${name}&page_number=${pageNumber}`)
-        console.log(`data fetched when name = ${name}`)
         return data
     },1500)
     const results = await fetchUsers(name, pageNumber) as User[]
