@@ -4,20 +4,20 @@ import { UserOutlined } from "@ant-design/icons";
 import "../scss/User.scss";
 import React, { useMemo, useRef, useState } from "react";
 
-interface IProps<U> {
+interface IProps{
     user: IUser;
     onClose: () => void;
-    onUpdate: (object: U) => void;
+    onUpdate: (object: IUser) => void;
 }
 
-export default function User({ user, onClose, onUpdate }: IProps<IUser>) {
+export default function User({ user, onClose, onUpdate }: IProps) {
     const [editModeEnabled, setEditModeEnabled] = useState<boolean>(false);
     const [userState, setUserState] = useState<IUser>(user);
     const fullName = useMemo(
         () => userState.firstName + " " + userState.lastName,
         [userState],
     );
-    const [saving, setSaving] = useState<boolean>(false);
+    const [saving, setSaving] = useState<boolean>(false)
     const originalUserState = useRef<IUser>(user);
 
     function onEditClick(event: React.MouseEvent<HTMLElement, MouseEvent>) {
@@ -28,13 +28,14 @@ export default function User({ user, onClose, onUpdate }: IProps<IUser>) {
         }
         setEditModeEnabled(!editModeEnabled);
     }
-    async function updateUser() {
+    async function updateUser(){
         try {
-            setSaving(true);
-            onUpdate(userState);
+            setSaving(true)
+            onUpdate(userState) 
         } catch (error) {
-        } finally {
-            setSaving(false);
+            
+        } finally{
+            setSaving(false)
         }
     }
     return (
@@ -44,7 +45,7 @@ export default function User({ user, onClose, onUpdate }: IProps<IUser>) {
             extra={
                 <Button onClick={onEditClick} type="primary">
                     {!editModeEnabled ? "Edit" : "Cancel"}
-                </Button>
+                </Button> 
             }
         >
             {editModeEnabled && (
