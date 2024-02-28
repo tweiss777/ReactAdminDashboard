@@ -1,3 +1,4 @@
+import  QueryUpdateResponse  from '../types/QueryUpdateResponse'
 import responseDTO from "../dtos/responseDTO";
 import execute from "../services/sql.service";
 import calculatePaginationOffset from "../utils/calculatePaginateOffset";
@@ -54,10 +55,13 @@ export async function updateUser(req: FastifyRequest<{Body: {user: User}, Params
             throw new Error('id is missing')
         }
         const query = "UPDATE Users SET first_name=?, last_name=?, email=?, address=? WHERE id=?;"
-        const results = await execute(query,[firstName, lastName, email, address, id])
-        const responseDto: responseDTO<any> = {
+        const results = await execute<QueryUpdateResponse>(query,[firstName, lastName, email, address, id])
+        
+        const responseDto: responseDTO<QueryUpdateResponse> = {
             status: 200,
-            data: results
+            data: {
+                changedRows: results.changedRows
+            }
         }
         reply.status(200).send(responseDto)
         
