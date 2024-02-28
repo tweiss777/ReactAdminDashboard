@@ -11,9 +11,9 @@ export default function Users() {
     const [users, setUsers] = useState<IUser[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [hasError, setHasError] = useState<boolean>(false);
-    const [name, setName] = useState<string>("");
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+    const [name, setName] = useState<string>('')
     const [saveSuccesful, setSaveSuccesful] = useState<boolean>(false);
     const totalUsers: React.MutableRefObject<number> = useRef<number>(0);
     const currentRouteId: string | null = useMemo<string | null>(
@@ -33,7 +33,14 @@ export default function Users() {
         setSearchParams(urlSearchParams);
     }
     async function onPageChange(page: number, _pageSize: number) {
-        const results = await getUsers(page);
+        let results
+        if(!name){
+            results = await getUsers(page);
+
+        }
+        else{
+            results = await getUsers(page,name)
+        }
         setUsers(results);
     }
 
@@ -52,6 +59,20 @@ export default function Users() {
         } catch (error) {
             setHasError(true)
         } 
+    }
+
+    async function searchByName(name: string){
+        let results: IUser[];
+        if(!name){
+            results = await getUsers()
+            totalUsers.current = await getUserCount()
+        }
+        else{
+            results = await getUsers(undefined,name)
+            totalUsers.current = await getUserCount(name)
+        }
+        setUsers(results)
+        setName(name)
     }
 
     const columns: TableProps<IUser>["columns"] = [
@@ -152,7 +173,7 @@ export default function Users() {
                         <h1>Users</h1>
                         <div className="search-bar">
                             <Input
-                                onChange={(event) => setName(event.currentTarget.value)}
+                                onChange={(event) => searchByName(event.target.value)}
                                 addonBefore={<SearchOutlined />}
                                 placeholder="Search By Name"
                             />

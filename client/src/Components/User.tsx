@@ -7,18 +7,19 @@ import React, { useMemo, useRef, useState } from "react";
 interface IProps<U> {
     user: IUser;
     onClose: () => void;
-    onUpdate?: (object: U) => void;
+    onUpdate: (object: U) => void;
 }
 
-export default function User({ user, onClose, onUpdate }: IProps) {
+export default function User({ user, onClose, onUpdate }: IProps<IUser>) {
     const [editModeEnabled, setEditModeEnabled] = useState<boolean>(false);
     const [userState, setUserState] = useState<IUser>(user);
     const fullName = useMemo(
         () => userState.firstName + " " + userState.lastName,
         [userState],
     );
-    const [saving, setSaving] = useState<boolean>(false)
+    const [saving, setSaving] = useState<boolean>(false);
     const originalUserState = useRef<IUser>(user);
+
     function onEditClick(event: React.MouseEvent<HTMLElement, MouseEvent>) {
         const mode: string | undefined =
             event.currentTarget.textContent?.toLowerCase();
@@ -27,14 +28,13 @@ export default function User({ user, onClose, onUpdate }: IProps) {
         }
         setEditModeEnabled(!editModeEnabled);
     }
-    async function updateUser(){
+    async function updateUser() {
         try {
-            setSaving(true)
-            await onUpdate<IUser>(userState) 
+            setSaving(true);
+            onUpdate(userState);
         } catch (error) {
-            
-        } finally{
-            setSaving(false)
+        } finally {
+            setSaving(false);
         }
     }
     return (
