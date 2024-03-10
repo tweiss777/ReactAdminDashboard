@@ -25,3 +25,21 @@ export async function getCreditLogs(
         throw error;
     }
 }
+
+
+export async function getCreditLogCount(_req: FastifyRequest, reply: FastifyReply){
+    try {
+        const query: string = "SELECT COUNT(*) AS 'count' FROM CreditLog;"
+        const result: {count: number} = await execute<{count: number}>(query)
+        const responseDTO: responseDTO<{count: number}> = {
+            status: 200,
+            data: result
+        }
+        return reply.status(200).send(responseDTO) 
+    } catch (error) {
+        throw error
+    }
+
+
+
+}
