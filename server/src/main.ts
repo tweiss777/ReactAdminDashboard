@@ -3,12 +3,14 @@ import "dotenv/config";
 import cors from "@fastify/cors";
 import userRoutes from "./routes/users.route";
 import responseDTO from "./dtos/responseDTO";
+import creditLogRoutes from "./routes/creditlogs.route";
 
 const { PORT: port } = process.env;
 const fastify: FastifyInstance = Fastify();
 
 fastify.register(cors);
 fastify.register(userRoutes, { prefix: 'api/v1/users' });
+fastify.register(creditLogRoutes ,{ prefix: 'api/v1/credits' });
 
 
 fastify.setErrorHandler((error: FastifyError, req: FastifyRequest, reply: FastifyReply) => {
