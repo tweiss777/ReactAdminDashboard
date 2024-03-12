@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Table, Alert, Input, Pagination } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
 import type { TableProps } from "antd";
 import { CreditLog as ICreditLog } from "../types/CreditLog";
-import { useSearchParams } from "react-router-dom";
 import { getCreditLogs, getLogCount } from "../services/creditlog.service";
 import "../scss/Users.scss";
 export default function CreditLog() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedLog, setSelectedLog] = useState<ICreditLog | null>(null);
   const [creditLogs, setCreditLogs] = useState<ICreditLog[]>([]);
   const totalCreditLogs: React.MutableRefObject<number> = useRef<number>(0);
   useEffect(() => {
@@ -31,7 +27,8 @@ export default function CreditLog() {
     fetchCreditLogs();
   }, []);
   async function onPageChange(page: number, _pageSize: number) {
-    throw new Error("not implemented");
+    const logs = await getCreditLogs(page)
+    setCreditLogs(logs)
   }
   const columns: TableProps<ICreditLog>["columns"] = [
     {
