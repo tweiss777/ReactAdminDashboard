@@ -33,7 +33,7 @@ export async function getCreditLogCount(_req: FastifyRequest, reply: FastifyRepl
         const result: {count: number} = await execute<{count: number}>(query)
         const responseDTO: responseDTO<{count: number}> = {
             status: 200,
-            data: result
+            data: result[0]
         }
         return reply.status(200).send(responseDTO) 
     } catch (error) {
