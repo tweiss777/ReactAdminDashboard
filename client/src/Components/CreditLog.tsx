@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Table, Alert, Input, Pagination } from "antd";
+import { Table, Alert, Pagination } from "antd";
 import type { TableProps } from "antd";
 import { CreditLog as ICreditLog } from "../types/CreditLog";
 import { getCreditLogs, getLogCount } from "../services/creditlog.service";
@@ -27,49 +27,29 @@ export default function CreditLog() {
     fetchCreditLogs();
   }, []);
   async function onPageChange(page: number, _pageSize: number) {
-    const logs = await getCreditLogs(page)
-    setCreditLogs(logs)
+    const logs = await getCreditLogs(page);
+    setCreditLogs(logs);
   }
   const columns: TableProps<ICreditLog>["columns"] = [
     {
       title: "id",
       dataIndex: "id",
       key: "id",
-      onCell: (record, _row) => {
-        return {
-          onClick: () => {},
-        };
-      },
     },
     {
       title: "amount",
       dataIndex: "amount",
       key: "amount",
-      onCell: (record, _row) => {
-        return {
-          onClick: () => {},
-        };
-      },
     },
     {
       title: "reason",
       dataIndex: "reason",
       key: "reason",
-      onCell: (record, _row) => {
-        return {
-          onClick: () => {},
-        };
-      },
     },
     {
       title: "userId",
       dataIndex: "userId",
       key: "userId",
-      onCell: (record, _row) => {
-        return {
-          onClick: () => {},
-        };
-      },
     },
   ];
 
