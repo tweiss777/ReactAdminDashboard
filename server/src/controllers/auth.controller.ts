@@ -102,12 +102,12 @@ export async function verifyToken(req: any, reply: FastifyReply) {
 export async function authorize(req: any, reply: FastifyReply) {
     function sendForbidden() {
         const responseDTO: responseDTO<{ message: string }> = {
-            status: 401,
+            status: 403,
             data: {
                 message: "forbidden",
             },
         };
-        reply.status(401).send(responseDTO);
+        reply.status(403).send(responseDTO);
 
     }
     function sendUnauthorzed() {
