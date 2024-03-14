@@ -7,26 +7,26 @@ import QueryCreateResponse from "../types/QueryCreateResponse";
 
 
 
-export async function registerUser(req: FastifyRequest<{Body: User }>, reply: any) {
+export async function registerUser(req: FastifyRequest<{ Body: User }>, reply: any) {
     try {
         const newuser = req.body
-        
+
         const existingEmailQuery = "SELECT email FROM Users WHERE email = ? LIMIT 1";
-        const result: {email: string }[] = await execute<{email: string }[]>(existingEmailQuery, [newuser.email]); 
-        if(result[0]?.email){
-            const responseDto: responseDTO<{message: string}> = {
+        const result: { email: string }[] = await execute<{ email: string }[]>(existingEmailQuery, [newuser.email]);
+        if (result[0]?.email) {
+            const responseDto: responseDTO<{ message: string }> = {
                 status: 409,
                 data: {
                     message: "User already exists"
                 }
-            } 
+            }
             reply.status(409).send(responseDto)
             return
         }
         const newUserQuery: string = "INSERT INTO Users (first_name, last_Name, email, password, ip_address, Role) VALUES (?,?,?,?,'127.0.0.1','user');"
         const encryptedPassword: string = encrypt(newuser?.password as string)
         const newUserResult: QueryCreateResponse = await execute<QueryCreateResponse>(newUserQuery, [newuser.firstName, newuser.lastName, newuser.email, encryptedPassword])
-        if(newUserResult.affectedRows > 0){
+        if (newUserResult.affectedRows > 0) {
             const token = await reply.jwtSign({
                 email: newuser.email,
                 role: 'user'
@@ -56,7 +56,7 @@ export async function login(
                 email: result[0].email,
                 role: result[0].role,
             });
-            const responseDto: responseDTO<{token: string}> = {
+            const responseDto: responseDTO<{ token: string }> = {
                 status: 200,
                 data: {
                     token
@@ -64,9 +64,9 @@ export async function login(
 
             }
             reply.status(200).send(responseDto);
-           return;
+            return;
         }
-        
+
 
         const responseDto: responseDTO<{ message: string }> = {
             status: 401,
@@ -98,3 +98,44 @@ export async function verifyToken(req: any, reply: FastifyReply) {
         throw error;
     }
 }
+
+export async function authorize(req: any, reply: FastifyReply) {
+    function sendForbidden() {
+        const responseDTO: responseDTO<{ message: string }> = {
+            status: 403,
+            data: {
+                message: "forbidden",
+            },
+        };
+        reply.status(403).send(responseDTO);
+
+    }
+    function sendUnauthorzed() {
+        const responseDTO: responseDTO<{ message: string }> = {
+            status: 401,
+            data: {
+                message: "Unauthorized",
+            },
+        };
+        reply.status(401).send(responseDTO);
+
+    }
+    try {
+        // this gives a deprecation warning
+        const roles = req.routeOptions.config.roles
+        const token = await req.jwtVerify()
+        if (!roles.includes(token.role)) {
+            sendForbidden()
+        }
+    } catch (error) {
+        const err = error as any;
+        if (err?.statusCode === 401) {
+            sendUnauthorzed()
+            return;
+        }
+        throw error;
+    }
+}
+
+
+
