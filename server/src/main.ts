@@ -1,28 +1,45 @@
-import Fastify, { FastifyError, FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import 'reflect-metadata'
+import Fastify, {
+    FastifyError,
+    FastifyInstance,
+    FastifyReply,
+    FastifyRequest,
+} from "fastify";
 import "dotenv/config";
 import cors from "@fastify/cors";
 import userRoutes from "./routes/users.route";
 import responseDTO from "./dtos/responseDTO";
 import creditLogRoutes from "./routes/creditlogs.route";
+import fastifyJwt from "@fastify/jwt";
 
-const { PORT: port } = process.env;
+import authRoutes from "./routes/auth.routes";
+import { verifyToken } from "./controllers/auth.controller";
+
+const { PORT: port, AUTH_SECRET: authSecret } = process.env;
 const fastify: FastifyInstance = Fastify();
 
 fastify.register(cors);
-fastify.register(userRoutes, { prefix: 'api/v1/users' });
-fastify.register(creditLogRoutes ,{ prefix: 'api/v1/credits' });
+fastify.register(authRoutes, { prefix: "api/v1/auth" });
+fastify.register(userRoutes, { prefix: "api/v1/users" });
+fastify.register(creditLogRoutes, { prefix: "api/v1/credits" });
 
+fastify.register(fastifyJwt ,{
+    secret: authSecret,
+});
 
-fastify.setErrorHandler((error: FastifyError, req: FastifyRequest, reply: FastifyReply) => {
-   const response: responseDTO<{error: string }> = {
-        status: 500,
-        data: {
-            error: error.message
-        }
-    }
-    reply.status(500).send(response)
+fastify.decorate('verifyToken', verifyToken)
 
-})
+fastify.setErrorHandler(
+    (error: FastifyError, req: FastifyRequest, reply: FastifyReply) => {
+        const response: responseDTO<{ error: string }> = {
+            status: 500,
+            data: {
+                error: error.message,
+            },
+        };
+        reply.status(500).send(response);
+    },
+);
 
 async function start() {
     try {
