@@ -8,7 +8,6 @@
     "crypto-js": "^4.2.0",
     "fastify": "^4.26.1",
     "mysql2": "^3.9.1",
-    "reflect-metadata": "^0.2.1"
   },
   "scripts": {
     "start": "ts-node src/main.ts",
