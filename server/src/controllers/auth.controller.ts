@@ -5,6 +5,8 @@ import User from "../types/User";
 import { decrypt, encrypt } from "../utils/encryptDecrypt";
 import QueryCreateResponse from "../types/QueryCreateResponse";
 
+
+
 export async function registerUser(req: FastifyRequest<{Body: User }>, reply: any) {
     try {
         const newuser = req.body
@@ -80,8 +82,7 @@ export async function login(
 
 export async function verifyToken(req: any, reply: FastifyReply) {
     try {
-        const decodedToken = await req.jwtVerify();
-        reply.send({ decodedToken });
+        await req.jwtVerify();
     } catch (error) {
         const err = error as any;
         if (err?.statusCode === 401) {
