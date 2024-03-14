@@ -1,11 +1,11 @@
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import {  FastifyPluginOptions } from "fastify";
 import { getCreditLogCount, getCreditLogs } from "../controllers/creditLogs.controller";
-
+import CustomFastifyInstance from "../types/CustomFastifyInstance";
 export default async function creditLogRoutes(
-    fastify: FastifyInstance,
+    fastify: CustomFastifyInstance,
     _options: FastifyPluginOptions,
 ) { 
-    fastify.get('/',getCreditLogs)
-    fastify.get('/credit-log-count', getCreditLogCount)
+    fastify.get('/',{ preHandler: [fastify.verifyToken] }, getCreditLogs)
+    fastify.get('/credit-log-count', { preHandler: [fastify.verifyToken] },getCreditLogCount)
 
 }
