@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
-import authorize, { login, registerUser, verifyToken } from "../controllers/auth.controller";
+import { authorize, login, registerUser, verifyToken } from "../controllers/auth.controller";
 
 export default async function authRoutes(
     fastify: FastifyInstance,

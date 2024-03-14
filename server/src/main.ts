@@ -11,9 +11,8 @@ import userRoutes from "./routes/users.route";
 import responseDTO from "./dtos/responseDTO";
 import creditLogRoutes from "./routes/creditlogs.route";
 import fastifyJwt from "@fastify/jwt";
-
 import authRoutes from "./routes/auth.routes";
-import { verifyToken } from "./controllers/auth.controller";
+import { authorize, verifyToken } from "./controllers/auth.controller";
 
 const { PORT: port, AUTH_SECRET: authSecret } = process.env;
 const fastify: FastifyInstance = Fastify();
@@ -28,9 +27,9 @@ fastify.register(fastifyJwt ,{
 });
 
 fastify.decorate('verifyToken', verifyToken)
-
+fastify.decorate('authorize', authorize)
 fastify.setErrorHandler(
-    (error: FastifyError, req: FastifyRequest, reply: FastifyReply) => {
+    (error: FastifyError, _req: FastifyRequest, reply: FastifyReply) => {
         const response: responseDTO<{ error: string }> = {
             status: 500,
             data: {

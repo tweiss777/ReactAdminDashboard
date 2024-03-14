@@ -99,7 +99,7 @@ export async function verifyToken(req: any, reply: FastifyReply) {
     }
 }
 
-export default async function authorize(req: any, reply: FastifyReply) {
+export async function authorize(req: any, reply: FastifyReply) {
     function sendForbidden() {
         const responseDTO: responseDTO<{ message: string }> = {
             status: 401,
