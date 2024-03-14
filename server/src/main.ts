@@ -1,4 +1,4 @@
-
+import 'reflect-metadata'
 import Fastify, {
     FastifyError,
     FastifyInstance,
@@ -29,7 +29,7 @@ fastify.register(fastifyJwt ,{
     secret: authSecret,
 });
 
-fastify.decorate('verifyJwt', verifyToken)
+fastify.decorate('verifyToken', verifyToken)
 
 fastify.setErrorHandler(
     (error: FastifyError, req: FastifyRequest, reply: FastifyReply) => {
