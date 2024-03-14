@@ -10,7 +10,6 @@ import cors from "@fastify/cors";
 import userRoutes from "./routes/users.route";
 import responseDTO from "./dtos/responseDTO";
 import creditLogRoutes from "./routes/creditlogs.route";
-import fastifyAuth from "@fastify/auth";
 import fastifyJwt from "@fastify/jwt";
 
 import authRoutes from "./routes/auth.routes";
@@ -23,7 +22,6 @@ fastify.register(cors);
 fastify.register(authRoutes, { prefix: "api/v1/auth" });
 fastify.register(userRoutes, { prefix: "api/v1/users" });
 fastify.register(creditLogRoutes, { prefix: "api/v1/credits" });
-fastify.register(fastifyAuth);
 
 fastify.register(fastifyJwt ,{
     secret: authSecret,
