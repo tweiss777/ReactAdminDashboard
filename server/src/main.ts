@@ -14,6 +14,7 @@ import fastifyAuth from "@fastify/auth";
 import fastifyJwt from "@fastify/jwt";
 
 import authRoutes from "./routes/auth.routes";
+import { verifyToken } from "./controllers/auth.controller";
 
 const { PORT: port, AUTH_SECRET: authSecret } = process.env;
 const fastify: FastifyInstance = Fastify();
@@ -27,6 +28,8 @@ fastify.register(fastifyAuth);
 fastify.register(fastifyJwt ,{
     secret: authSecret,
 });
+
+fastify.decorate('verifyJwt', verifyToken)
 
 fastify.setErrorHandler(
     (error: FastifyError, req: FastifyRequest, reply: FastifyReply) => {
