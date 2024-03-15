@@ -5,6 +5,7 @@ import { NavBar } from "./Components/Navbar";
 import Users from "./Components/Users";
 import Affiliates from "./Components/Affiliates";
 import CreditLog from "./Components/CreditLog";
+import Login from "./Components/Login";
 function App() {
     const dispatch = useAppDispatch();
 
@@ -24,6 +25,7 @@ function App() {
                     <Route path="/" element={<Users />} />
                     <Route path="/affiliates" element={<Affiliates />} />
                     <Route path="/credits" element={<CreditLog />} />
+                    <Route path="/login" element={<Login/>} />
                 </Routes>
             </BrowserRouter>
         </>
