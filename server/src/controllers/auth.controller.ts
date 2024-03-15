@@ -74,7 +74,7 @@ export async function login(
                 message: "Invalid username or password",
             },
         };
-        reply.status(401).send(responseDto);
+        reply.status(403).send(responseDto);
     } catch (err) {
         throw err;
     }
