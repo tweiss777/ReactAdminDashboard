@@ -11,9 +11,9 @@ export default function Login() {
     async function login(event:React.FormEvent<HTMLFormElement>){
         event.preventDefault()
         const formData: FormData = new FormData(event.currentTarget)
-        const email: string = formData.get('email');
-        const password: string = formData.get('password');
-        const rememberMe: string | null = formData.get('remember-me')
+        const email: string | undefined = formData.get('email')?.toString();
+        const password: string | undefined = formData.get('password')?.toString()
+        const rememberMe: string | undefined = formData.get('remember-me')?.toString()
     }
     return (
         <div className="login-container">
