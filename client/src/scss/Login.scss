@@ -1,0 +1,20 @@
+.login-container {
+    padding: 0 4%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: url("https://t3.ftcdn.net/jpg/00/62/49/06/360_F_62490698_AfKvpBwVfVkRbkyUJPe6mhNWjOsqUSAV.jpg");
+    background-size: cover;
+
+    .login-box {
+        background-color: #ffffff;
+        transform: translateY(-20px);
+        border: solid black 2px;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 5px;
+    }
+}

@@ -5,36 +5,48 @@ import User from "../types/User";
 import { decrypt, encrypt } from "../utils/encryptDecrypt";
 import QueryCreateResponse from "../types/QueryCreateResponse";
 
-
-
-export async function registerUser(req: FastifyRequest<{ Body: User }>, reply: any) {
+export async function registerUser(
+    req: FastifyRequest<{ Body: User }>,
+    reply: any,
+) {
     try {
-        const newuser = req.body
+        const newuser = req.body;
 
-        const existingEmailQuery = "SELECT email FROM Users WHERE email = ? LIMIT 1";
-        const result: { email: string }[] = await execute<{ email: string }[]>(existingEmailQuery, [newuser.email]);
+        const existingEmailQuery =
+            "SELECT email FROM Users WHERE email = ? LIMIT 1";
+        const result: { email: string }[] = await execute<{ email: string }[]>(
+            existingEmailQuery,
+            [newuser.email],
+        );
         if (result[0]?.email) {
             const responseDto: responseDTO<{ message: string }> = {
                 status: 409,
                 data: {
-                    message: "User already exists"
-                }
-            }
-            reply.status(409).send(responseDto)
-            return
+                    message: "User already exists",
+                },
+            };
+            reply.status(409).send(responseDto);
+            return;
         }
-        const newUserQuery: string = "INSERT INTO Users (first_name, last_Name, email, password, ip_address, Role) VALUES (?,?,?,?,'127.0.0.1','user');"
-        const encryptedPassword: string = encrypt(newuser?.password as string)
-        const newUserResult: QueryCreateResponse = await execute<QueryCreateResponse>(newUserQuery, [newuser.firstName, newuser.lastName, newuser.email, encryptedPassword])
+        const newUserQuery: string =
+            "INSERT INTO Users (first_name, last_Name, email, password, ip_address, Role) VALUES (?,?,?,?,'127.0.0.1','user');";
+        const encryptedPassword: string = encrypt(newuser?.password as string);
+        const newUserResult: QueryCreateResponse =
+            await execute<QueryCreateResponse>(newUserQuery, [
+                newuser.firstName,
+                newuser.lastName,
+                newuser.email,
+                encryptedPassword,
+            ]);
         if (newUserResult.affectedRows > 0) {
             const token = await reply.jwtSign({
                 email: newuser.email,
-                role: 'user'
+                role: "user",
             });
             reply.send({ token });
-            return
+            return;
         }
-        throw new Error("Something went wrong while creating new user")
+        throw new Error("Something went wrong while creating new user");
     } catch (err) {
         throw err;
     }
@@ -46,35 +58,39 @@ export async function login(
 ) {
     try {
         const { email, password } = req.body;
-        const query: string = "SELECT email, password, Role as 'role' FROM Users WHERE email = ?";
+        const query: string =
+            "SELECT email, password, Role as 'role' FROM Users WHERE email = ?";
 
         const result: User[] = await execute<User[]>(query, [email]);
 
-        const decryptedPassword: string = decrypt(result[0]?.password as string) as string;
-        if (password === decryptedPassword) {
-            const token = await reply.jwtSign({
-                email: result[0].email,
-                role: result[0].role,
-            });
-            const responseDto: responseDTO<{ token: string }> = {
-                status: 200,
-                data: {
-                    token
-                }
+        if (result.length > 0) {
+            const decryptedPassword: string = decrypt(
+                result[0]?.password as string,
+            ) as string;
 
+            if (password === decryptedPassword) {
+                const token = await reply.jwtSign({
+                    email: result[0].email,
+                    role: result[0].role,
+                });
+                const responseDto: responseDTO<{ token: string }> = {
+                    status: 200,
+                    data: {
+                        token,
+                    },
+                };
+                reply.status(200).send(responseDto);
+                return;
             }
-            reply.status(200).send(responseDto);
-            return;
         }
 
-
         const responseDto: responseDTO<{ message: string }> = {
-            status: 401,
+            status: 403,
             data: {
                 message: "Invalid username or password",
             },
         };
-        reply.status(401).send(responseDto);
+        reply.status(403).send(responseDto);
     } catch (err) {
         throw err;
     }
@@ -108,7 +124,6 @@ export async function authorize(req: any, reply: FastifyReply) {
             },
         };
         reply.status(403).send(responseDTO);
-
     }
     function sendUnauthorzed() {
         const responseDTO: responseDTO<{ message: string }> = {
@@ -118,24 +133,20 @@ export async function authorize(req: any, reply: FastifyReply) {
             },
         };
         reply.status(401).send(responseDTO);
-
     }
     try {
         // this gives a deprecation warning
-        const roles = req.routeOptions.config.roles
-        const token = await req.jwtVerify()
+        const roles = req.routeOptions.config.roles;
+        const token = await req.jwtVerify();
         if (!roles.includes(token.role)) {
-            sendForbidden()
+            sendForbidden();
         }
     } catch (error) {
         const err = error as any;
         if (err?.statusCode === 401) {
-            sendUnauthorzed()
+            sendUnauthorzed();
             return;
         }
         throw error;
     }
 }
-
-
-
