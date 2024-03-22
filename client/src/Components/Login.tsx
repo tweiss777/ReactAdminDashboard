@@ -1,12 +1,15 @@
 import "../scss/Login.scss";
+import UserData from "../types/userData";
 import { Input, Button, Checkbox, Alert } from "antd";
 import { MailOutlined, KeyOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import { jwtDecode } from 'jwt-decode'
 import { login } from "../services/authentication.service";
-
+import { useNavigate } from "react-router-dom";
 export default function Login() {
     const [loggingIn, setLoggingIn] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+    const navigate = useNavigate()
 
     async function loginUser(event: React.FormEvent<HTMLFormElement>) {
         try {
@@ -28,6 +31,16 @@ export default function Login() {
                 } else{
                     sessionStorage.setItem("token", token)
                 }
+                localStorage.setItem('isLoggedIn','true')
+                const decodedToken = jwtDecode(token) 
+                localStorage.setItem('user-data', JSON.stringify(decodedToken))
+                const userData: UserData = decodedToken as UserData
+                if(userData.role.toLowerCase() === 'admin'){
+                    navigate('/')
+                }
+                else{
+                    setError('Site is under maintenance comeback soon!')
+                }
             } else {
                 setError("Email and password required");
             }
@@ -36,7 +49,6 @@ export default function Login() {
         }
         finally{
             setLoggingIn(false)
-
         }
     }
     return (
