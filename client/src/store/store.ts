@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import dimensionReducer from './dimensionSlice'
+import authenticationReducer from './authenticationSlice'
 const store = configureStore({
     reducer: {
-        dimensions: dimensionReducer
+        dimensions: dimensionReducer,
+        authentication: authenticationReducer
     }
 })
 
