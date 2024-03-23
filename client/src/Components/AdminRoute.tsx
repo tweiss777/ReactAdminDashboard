@@ -11,7 +11,6 @@ export default function AdminRoute({ children }: IProps) {
   const token = getToken();
   if (token) {
     const decodedToken: UserData = jwtDecode<UserData>(token);
-    console.log(decodedToken)
     if (decodedToken.role === "admin") {
       return <>{children}</>;
     }
