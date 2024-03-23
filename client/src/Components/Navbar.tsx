@@ -1,9 +1,26 @@
 import { Menu, type MenuProps } from "antd";
 import { useNavigate } from "react-router-dom";
+import getToken from "../utils/getToken";
+import deleteToken from "../utils/deleteToken";
+import { useAppDispatch } from "../store/storeHooks";
+import { setIsLoggedIn } from "../store/authenticationSlice";
 export function NavBar() {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     function navigateTo(path: string) {
         navigate(path);
+    }
+
+
+    function logUserOut(){
+       const token: string | null = getToken()
+        if(token){
+            deleteToken()
+            dispatch(setIsLoggedIn(false))
+            navigateTo('/login')
+
+        }
+    
     }
 
     const menuItems: MenuProps["items"] = [
@@ -18,6 +35,10 @@ export function NavBar() {
         {
             label: <span onClick={() => navigateTo("/credits")}>Credits</span>,
             key: "credits",
+        },
+        {
+            label: <span onClick={logUserOut}>Logout</span>,
+            key: "logout",
         },
     ];
 
