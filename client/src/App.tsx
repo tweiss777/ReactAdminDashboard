@@ -7,6 +7,9 @@ import Affiliates from "./Components/Affiliates";
 import CreditLog from "./Components/CreditLog";
 import Login from "./Components/Login";
 import ProtectedComponent from "./Components/ProtectedComponent";
+import AdminRoute from "./Components/AdminRoute";
+
+
 function App() {
   const dispatch = useAppDispatch();
   const isLoggedIn = useAppSelector((state) => state.authentication.isLoggedIn);
@@ -28,7 +31,9 @@ function App() {
             path="/"
             element={
               <ProtectedComponent>
+                <AdminRoute>
                 <Users />
+                </AdminRoute>
               </ProtectedComponent>
             }
           />
@@ -36,7 +41,9 @@ function App() {
             path="/affiliates"
             element={
               <ProtectedComponent>
+                <AdminRoute>
                 <Affiliates />
+                </AdminRoute>
               </ProtectedComponent>
             }
           />
@@ -44,7 +51,9 @@ function App() {
             path="/credits"
             element={
               <ProtectedComponent>
-                <CreditLog />
+                <AdminRoute>
+                    <CreditLog />
+                </AdminRoute>
               </ProtectedComponent>
             }
           />
