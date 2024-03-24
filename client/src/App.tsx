@@ -26,10 +26,8 @@ function App() {
       <BrowserRouter>
         {isLoggedIn && <NavBar />}
         <Routes>
-          <Route path="/*" element={
-                    <NotFound />
-                    }/>
-        
+          <Route path="/*" element={<NotFound />} />
+
           <Route
             path="/"
             element={
