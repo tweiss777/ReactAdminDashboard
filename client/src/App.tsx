@@ -7,6 +7,9 @@ import Affiliates from "./Components/Affiliates";
 import CreditLog from "./Components/CreditLog";
 import Login from "./Components/Login";
 import ProtectedComponent from "./Components/ProtectedComponent";
+import AdminRoute from "./Components/AdminRoute";
+import NotFound from "./Components/NotFound";
+
 function App() {
   const dispatch = useAppDispatch();
   const isLoggedIn = useAppSelector((state) => state.authentication.isLoggedIn);
@@ -23,12 +26,15 @@ function App() {
       <BrowserRouter>
         {isLoggedIn && <NavBar />}
         <Routes>
-          {/*todo encapsulate all routes but login with Protected route component*/}
+          <Route path="/*" element={<NotFound />} />
+
           <Route
             path="/"
             element={
               <ProtectedComponent>
-                <Users />
+                <AdminRoute>
+                  <Users />
+                </AdminRoute>
               </ProtectedComponent>
             }
           />
@@ -36,7 +42,9 @@ function App() {
             path="/affiliates"
             element={
               <ProtectedComponent>
-                <Affiliates />
+                <AdminRoute>
+                  <Affiliates />
+                </AdminRoute>
               </ProtectedComponent>
             }
           />
@@ -44,7 +52,9 @@ function App() {
             path="/credits"
             element={
               <ProtectedComponent>
-                <CreditLog />
+                <AdminRoute>
+                  <CreditLog />
+                </AdminRoute>
               </ProtectedComponent>
             }
           />
