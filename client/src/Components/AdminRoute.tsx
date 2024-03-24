@@ -15,5 +15,5 @@ export default function AdminRoute({ children }: IProps) {
       return <>{children}</>;
     }
   }
-  return <Navigate to={"/login"} />;
+  return <Navigate to={"/not-found"} />;
 }
