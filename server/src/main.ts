@@ -12,30 +12,47 @@ import creditLogRoutes from "./routes/creditlogs.route";
 import fastifyJwt from "@fastify/jwt";
 import authRoutes from "./routes/auth.routes";
 import { authorize, verifyToken } from "./controllers/auth.controller";
-
+import ajvKeywords from "./ajv-keywords";
+import ajvErrors from "ajv-errors";
 const { PORT: port, AUTH_SECRET: authSecret } = process.env;
-const fastify: FastifyInstance = Fastify();
+const fastify: FastifyInstance = Fastify({
+    ajv: {
+
+        customOptions: {
+            allErrors: true,
+            keywords: ajvKeywords
+        },
+        plugins: [ajvErrors],
+    },
+});
 
 fastify.register(cors);
 fastify.register(authRoutes, { prefix: "api/v1/auth" });
 fastify.register(userRoutes, { prefix: "api/v1/users" });
 fastify.register(creditLogRoutes, { prefix: "api/v1/credits" });
 
-fastify.register(fastifyJwt ,{
+fastify.register(fastifyJwt, {
     secret: authSecret,
 });
 
-fastify.decorate('verifyToken', verifyToken)
-fastify.decorate('authorize', authorize)
+fastify.decorate("verifyToken", verifyToken);
+fastify.decorate("authorize", authorize);
 fastify.setErrorHandler(
     (error: FastifyError, _req: FastifyRequest, reply: FastifyReply) => {
-        const response: responseDTO<{ error: string }> = {
-            status: 500,
-            data: {
-                error: error.message,
-            },
+        const statusCode = error.statusCode ?? 500;
+        let errorMessages: string[];
+        let data: { error: string } | { errors: string[] };
+        if (error.validation) {
+            errorMessages = error.validation.map((err) => err?.message as string);
+            data = { errors: errorMessages };
+        } else {
+            data = { error: error.message };
+        }
+        const response: responseDTO<{ error: string } | { errors: string[] }> = {
+            status: statusCode,
+            data,
         };
-        reply.status(500).send(response);
+        reply.status(statusCode).send(response);
     },
 );
 
@@ -45,6 +62,7 @@ async function start() {
         await fastify.listen({ port: p });
         console.log(`Listeing on port ${p}`);
     } catch (error) {
+        console.log(error)
         fastify.log.error(error);
     }
 }
