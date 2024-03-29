@@ -1,6 +1,6 @@
 import { JSONSchemaType } from "ajv";
 
-type NewUserSchema = {
+export type NewUserSchema = {
     firstName: string;
     lastName: string;
     email: string;
@@ -14,22 +14,37 @@ const newUserSchema: JSONSchemaType<NewUserSchema> = {
         firstName: {
             type: "string",
             notEmpty: true,
+            errorMessage: {
+                notEmpty: "First name must not be empty",
+            },
         },
         lastName: {
             type: "string",
             notEmpty: true,
+            errorMessage: {
+                notEmpty: "Last name must not be empty",
+            },
         },
         address: {
             type: "string",
             notEmpty: true,
+            errorMessage: {
+                notEmpty: "Address must not be empty",
+            },
         },
         email: {
             type: "string",
             notEmpty: true,
+            errorMessage: {
+                notEmpty: "Email name must not be empty",
+            },
         },
         password: {
             type: "string",
             notEmpty: true,
+            errorMessage: {
+                notEmpty: "Password name must not be empty",
+            },
         },
     },
     required: ["firstName", "lastName", "email", "password", "address"],
@@ -43,5 +58,4 @@ const newUserSchema: JSONSchemaType<NewUserSchema> = {
         },
     },
 };
-
 export default newUserSchema;
