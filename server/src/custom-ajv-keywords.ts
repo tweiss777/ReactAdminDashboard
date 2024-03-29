@@ -1,13 +1,13 @@
 import { Vocabulary } from "ajv";
 
-export default [
+ export default [
     {
         keyword: "notEmpty",
         validate: (data: string) => {
             // todo fix this keyword
-            const onlyWhiteSpaces: boolean = /^\s*$/.test(data);
-            return data.trim().length > 0;
+            return typeof data === 'string' && data.trim().length > 0;
         },
+        
         errors: true,
     },
-] as Vocabulary;
+] as Vocabulary 

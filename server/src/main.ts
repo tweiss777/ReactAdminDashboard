@@ -12,17 +12,17 @@ import creditLogRoutes from "./routes/creditlogs.route";
 import fastifyJwt from "@fastify/jwt";
 import authRoutes from "./routes/auth.routes";
 import { authorize, verifyToken } from "./controllers/auth.controller";
-import ajvKeywords from "./ajv-keywords";
 import ajvErrors from "ajv-errors";
+import ajvKeywords from "ajv-keywords";
+import customAjvKeywords from "./custom-ajv-keywords";
 const { PORT: port, AUTH_SECRET: authSecret } = process.env;
 const fastify: FastifyInstance = Fastify({
     ajv: {
-
         customOptions: {
             allErrors: true,
-            keywords: ajvKeywords
+            keywords: customAjvKeywords,
         },
-        plugins: [ajvErrors],
+        plugins: [ajvErrors, ajvKeywords],
     },
 });
 
@@ -62,7 +62,7 @@ async function start() {
         await fastify.listen({ port: p });
         console.log(`Listeing on port ${p}`);
     } catch (error) {
-        console.log(error)
+        console.log(error);
         fastify.log.error(error);
     }
 }
