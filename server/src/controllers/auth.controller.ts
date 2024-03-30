@@ -29,12 +29,13 @@ export async function registerUser(
             return;
         }
         const newUserQuery: string =
-            "INSERT INTO Users (first_name, last_Name, email, password, ip_address, Role) VALUES (?,?,?,?,'127.0.0.1','user');";
+            "INSERT INTO Users (first_name, last_Name, address, email, password, ip_address, Role) VALUES (?,?,?,?,?,'127.0.0.1','user');";
         const encryptedPassword: string = encrypt(newuser?.password as string);
         const newUserResult: QueryCreateResponse =
             await execute<QueryCreateResponse>(newUserQuery, [
                 newuser.firstName,
                 newuser.lastName,
+                newuser.address,
                 newuser.email,
                 encryptedPassword,
             ]);
