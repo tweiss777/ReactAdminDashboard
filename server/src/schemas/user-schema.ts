@@ -51,13 +51,13 @@ const userSchema: JSONSchemaType<UserSchema> = {
             },
         },
     },
-    required: ["firstName", "lastName", "email", "password", "address"],
+    required: ["firstName", "lastName", "address", "email", "password"],
     errorMessage: {
         required: {
             email: "Email is required",
             firstName: "First Name is required",
             lastName: "Last Name is required",
-            address: "Email is required",
+            address: "Address is required",
             password: "Password is required",
         },
     },
