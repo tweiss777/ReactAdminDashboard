@@ -3,8 +3,7 @@ import { Vocabulary } from "ajv";
  export default [
     {
         keyword: "notEmpty",
-        validate: (data: string) => {
-            // todo fix this keyword
+        validate: (flag: boolean, data:string) => {
             return typeof data === 'string' && data.trim().length > 0;
         },
         
