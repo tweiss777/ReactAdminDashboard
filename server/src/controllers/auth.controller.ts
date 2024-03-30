@@ -1,12 +1,13 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import responseDTO from "../dtos/responseDTO";
 import execute from "../services/sql.service";
-import User from "../types/User";
 import { decrypt, encrypt } from "../utils/encryptDecrypt";
 import QueryCreateResponse from "../types/QueryCreateResponse";
+import { UserSchema } from "../schemas/user-schema";
+import User from "../types/User";
 
 export async function registerUser(
-    req: FastifyRequest<{ Body: User }>,
+    req: FastifyRequest<{ Body: UserSchema }>,
     reply: any,
 ) {
     try {
