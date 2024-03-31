@@ -1,12 +1,13 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import responseDTO from "../dtos/responseDTO";
 import execute from "../services/sql.service";
-import User from "../types/User";
 import { decrypt, encrypt } from "../utils/encryptDecrypt";
 import QueryCreateResponse from "../types/QueryCreateResponse";
+import { UserSchema } from "../schemas/user-schema";
+import User from "../types/User";
 
 export async function registerUser(
-    req: FastifyRequest<{ Body: User }>,
+    req: FastifyRequest<{ Body: UserSchema }>,
     reply: any,
 ) {
     try {
@@ -29,12 +30,13 @@ export async function registerUser(
             return;
         }
         const newUserQuery: string =
-            "INSERT INTO Users (first_name, last_Name, email, password, ip_address, Role) VALUES (?,?,?,?,'127.0.0.1','user');";
+            "INSERT INTO Users (first_name, last_Name, address, email, password, ip_address, Role) VALUES (?,?,?,?,?,'127.0.0.1','user');";
         const encryptedPassword: string = encrypt(newuser?.password as string);
         const newUserResult: QueryCreateResponse =
             await execute<QueryCreateResponse>(newUserQuery, [
                 newuser.firstName,
                 newuser.lastName,
+                newuser.address,
                 newuser.email,
                 encryptedPassword,
             ]);
