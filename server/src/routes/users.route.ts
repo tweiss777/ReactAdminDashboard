@@ -5,6 +5,7 @@ import {
     getUserCount,
     updateUser,
 } from "../controllers/user.controller";
+import nestedUserInfo from "../schemas/update-user-schema";
 
 export default async function userRoutes(
     fastify: CustomFastifyInstance,
@@ -31,6 +32,9 @@ export default async function userRoutes(
         {
             preHandler: [fastify.verifyToken, fastify.authorize],
             config: { roles: ["admin"] },
+            schema : {
+                body: nestedUserInfo,
+            }
         },
         updateUser,
     );
