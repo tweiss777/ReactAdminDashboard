@@ -1,5 +1,5 @@
 import { User as IUser } from "../types/Users";
-import { Card, Button, Input } from "antd";
+import { Card, Button, Input, Alert } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import "../scss/User.scss";
 import React, { useMemo, useRef, useState } from "react";
@@ -8,9 +8,10 @@ interface IProps{
     user: IUser;
     onClose: () => void;
     onUpdate: (object: IUser) => void;
+    errors: string[]
 }
 
-export default function User({ user, onClose, onUpdate }: IProps) {
+export default function User({ user, onClose, onUpdate, errors }: IProps) {
     const [editModeEnabled, setEditModeEnabled] = useState<boolean>(false);
     const [userState, setUserState] = useState<IUser>(user);
     const fullName = useMemo(
@@ -48,6 +49,11 @@ export default function User({ user, onClose, onUpdate }: IProps) {
                 </Button> 
             }
         >
+            {errors.length > 0 && <Alert type="error" message={
+                <ul>
+                    {errors.map(err => <li>{err}</li>)}
+                </ul>
+            } />}
             {editModeEnabled && (
                 <>
                     <h2>First Name</h2>
