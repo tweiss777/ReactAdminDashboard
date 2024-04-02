@@ -42,8 +42,10 @@ const nestedUserInfo: JSONSchemaType<NestedUpdatedInfo> = {
         email: {
             type: "string",
             notEmpty: true,
+            pattern: "/\S+@\S+\.\S+/",
             errorMessage: {
                 notEmpty: "Email name must not be empty",
+                pattern: "Invalid email format"
             },
         },
     },
