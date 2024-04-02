@@ -2,7 +2,7 @@ import { User as IUser } from "../types/Users";
 import { Card, Button, Input, Alert } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import "../scss/User.scss";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState  } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 interface IProps {
@@ -30,19 +30,18 @@ export default function User({
     formState: { errors: formErrors },
   } = useForm<IUser>({
     defaultValues: {
-      firstName: userState.firstName,
-      lastName: userState.lastName,
-      email: userState.email,
-      ipAddress: userState.ipAddress,
-      address: userState.address,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      ipAddress: user.ipAddress,
+      address: user.address,
     },
   });
   const watchFullName = watch(["firstName", "lastName"]);
-  const fullName = useMemo(
-    () => getValues("firstName") + " " + getValues("lastName"),
-    [watchFullName],
-  );
-
+  const fullName = useMemo(() => {
+    const [firstName, lastName] = getValues(["firstName", "lastName"]);
+    return `${firstName} ${lastName}`;
+  }, [watchFullName]);
 
   function onEditClick(event: React.MouseEvent<HTMLElement, MouseEvent>) {
     const mode: string | undefined =
@@ -54,9 +53,9 @@ export default function User({
   }
   async function updateUser() {
     try {
-      const user = getValues();
+      const userFromForm = getValues();
       setSaving(true);
-      onUpdate(user);
+      onUpdate({...userFromForm, id: user.id });
     } catch (error) {
     } finally {
       setSaving(false);
@@ -90,7 +89,13 @@ export default function User({
           <Controller
             name="firstName"
             control={control}
-            rules={{ required: "First name required" }}
+            rules={{
+              required: "First name required",
+              pattern: {
+                value: /^[a-zA-Z]+$/,
+                message: "First name must only contain characters",
+              },
+            }}
             render={({ field }) => (
               <>
                 <Input {...field} prefix={<UserOutlined />} />
@@ -108,7 +113,13 @@ export default function User({
           <Controller
             name="lastName"
             control={control}
-            rules={{ required: "Last name required" }}
+            rules={{
+              required: "Last name required",
+              pattern: {
+                value: /^[a-zA-Z]+$/,
+                message: "Last name must only contain characters",
+              },
+            }}
             render={({ field }) => (
               <>
                 <Input {...field} prefix={<UserOutlined />} />
@@ -136,7 +147,13 @@ export default function User({
           <Controller
             name="email"
             control={control}
-            rules={{ required: "Email is required" }}
+            rules={{
+              required: "Email is required",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "Invalid email format",
+              },
+            }}
             render={({ field }) => (
               <>
                 <Input {...field} />
