@@ -32,6 +32,7 @@ export default function Users() {
         const urlSearchParams = new URLSearchParams();
         urlSearchParams.delete("id");
         setSearchParams(urlSearchParams);
+        setValidationErrors([])
     }
     async function onPageChange(page: number, _pageSize: number) {
         let results
