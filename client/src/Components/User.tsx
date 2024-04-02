@@ -114,7 +114,6 @@ export default function User({
                 <Input {...field} prefix={<UserOutlined />} />
                 {formErrors.lastName?.message && (
                   <p className="validation-error">
-                    {" "}
                     {formErrors.lastName?.message}
                   </p>
                 )}
