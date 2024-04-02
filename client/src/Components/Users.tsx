@@ -14,6 +14,7 @@ export default function Users() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
     const [name, setName] = useState<string>('')
+    const [validationErrors, setValidationErrors] = useState<string[]>([])
     const [saveSuccesful, setSaveSuccesful] = useState<boolean>(false);
     const totalUsers: React.MutableRefObject<number> = useRef<number>(0);
     const currentRouteId: string | null = useMemo<string | null>(
@@ -31,6 +32,7 @@ export default function Users() {
         const urlSearchParams = new URLSearchParams();
         urlSearchParams.delete("id");
         setSearchParams(urlSearchParams);
+        setValidationErrors([])
     }
     async function onPageChange(page: number, _pageSize: number) {
         let results
@@ -47,6 +49,7 @@ export default function Users() {
     async function saveUser(userToUpdate: IUser) { 
         try {
             setHasError(false)
+            setValidationErrors([])
             const rowsChanged: number = await updateUser(userToUpdate)
             if(rowsChanged > 0){
                 setSaveSuccesful(true)
@@ -56,8 +59,15 @@ export default function Users() {
                 setUsers(updatedUsers)
             }
             
-        } catch (error) {
-            setHasError(true)
+        } catch (error: any) {
+            switch(error.response.status){
+                case 400:
+                    setValidationErrors(error.response.data.data.errors)
+                    break
+                default:
+                    setHasError(true)
+                    break
+            }
         } 
     }
 
@@ -151,7 +161,7 @@ export default function Users() {
                 ]);
                 setUsers(users);
                 totalUsers.current = totalCount;
-            } catch (error) {
+            } catch (error: any) { 
                 setHasError(true);
             } finally {
                 setIsLoading(false);
@@ -196,7 +206,7 @@ export default function Users() {
 
                     {currentRouteId && selectedUser && (
                         <div className="users-container">
-                            <User onUpdate={saveUser} onClose={closeUserForm} user={selectedUser} />{" "}
+                            <User errors={validationErrors} onUpdate={saveUser} onClose={closeUserForm} user={selectedUser} />{" "}
                         </div>
                     )}
                 </div>

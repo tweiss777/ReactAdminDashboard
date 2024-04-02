@@ -4,6 +4,9 @@
     box-shadow: 12px 22px 42px 1px rgba(0, 0, 0, 0.75);
     -webkit-box-shadow: 12px 22px 42px 1px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 12px 22px 42px 1px rgba(0, 0, 0, 0.75);
+    .validation-error{
+        color: #ff0000;
+    }
     .close-btn-container {
         text-align: center;
         .close-btn {
