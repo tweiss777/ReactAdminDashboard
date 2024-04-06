@@ -6,17 +6,20 @@ import { Table, Alert, Input, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { TableProps } from "antd";
 import { useSearchParams } from "react-router-dom";
+import { useThemeContext } from "../contexts/ThemeContext";
 import "../scss/Users.scss";
+import "../scss/DarkMode.scss";
 export default function Users() {
     const [users, setUsers] = useState<IUser[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [hasError, setHasError] = useState<boolean>(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
-    const [name, setName] = useState<string>('')
-    const [validationErrors, setValidationErrors] = useState<string[]>([])
+    const [name, setName] = useState<string>("");
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const [saveSuccesful, setSaveSuccesful] = useState<boolean>(false);
     const totalUsers: React.MutableRefObject<number> = useRef<number>(0);
+    const { isEnabled: darkModeEnabled } = useThemeContext();
     const currentRouteId: string | null = useMemo<string | null>(
         () => searchParams.get("id"),
         [searchParams],
@@ -32,57 +35,55 @@ export default function Users() {
         const urlSearchParams = new URLSearchParams();
         urlSearchParams.delete("id");
         setSearchParams(urlSearchParams);
-        setValidationErrors([])
+        setValidationErrors([]);
     }
     async function onPageChange(page: number, _pageSize: number) {
-        let results
-        if(!name){
+        let results;
+        if (!name) {
             results = await getUsers(page);
-
-        }
-        else{
-            results = await getUsers(page,name)
+        } else {
+            results = await getUsers(page, name);
         }
         setUsers(results);
     }
 
-    async function saveUser(userToUpdate: IUser) { 
+    async function saveUser(userToUpdate: IUser) {
         try {
-            setHasError(false)
-            setValidationErrors([])
-            const rowsChanged: number = await updateUser(userToUpdate)
-            if(rowsChanged > 0){
-                setSaveSuccesful(true)
-                const updatedIndex = users.findIndex(user => user.id === userToUpdate.id)
-                const updatedUsers = [...users]
-                updatedUsers[updatedIndex] = {...userToUpdate}
-                setUsers(updatedUsers)
+            setHasError(false);
+            setValidationErrors([]);
+            const rowsChanged: number = await updateUser(userToUpdate);
+            if (rowsChanged > 0) {
+                setSaveSuccesful(true);
+                const updatedIndex = users.findIndex(
+                    (user) => user.id === userToUpdate.id,
+                );
+                const updatedUsers = [...users];
+                updatedUsers[updatedIndex] = { ...userToUpdate };
+                setUsers(updatedUsers);
             }
-            
         } catch (error: any) {
-            switch(error.response.status){
+            switch (error.response.status) {
                 case 400:
-                    setValidationErrors(error.response.data.data.errors)
-                    break
+                    setValidationErrors(error.response.data.data.errors);
+                    break;
                 default:
-                    setHasError(true)
-                    break
+                    setHasError(true);
+                    break;
             }
-        } 
+        }
     }
 
-    async function searchByName(name: string){
+    async function searchByName(name: string) {
         let results: IUser[];
-        if(!name){
-            results = await getUsers()
-            totalUsers.current = await getUserCount()
+        if (!name) {
+            results = await getUsers();
+            totalUsers.current = await getUserCount();
+        } else {
+            results = await getUsers(undefined, name);
+            totalUsers.current = await getUserCount(name);
         }
-        else{
-            results = await getUsers(undefined,name)
-            totalUsers.current = await getUserCount(name)
-        }
-        setUsers(results)
-        setName(name)
+        setUsers(results);
+        setName(name);
     }
 
     const columns: TableProps<IUser>["columns"] = [
@@ -161,7 +162,7 @@ export default function Users() {
                 ]);
                 setUsers(users);
                 totalUsers.current = totalCount;
-            } catch (error: any) { 
+            } catch (error: any) {
                 setHasError(true);
             } finally {
                 setIsLoading(false);
@@ -178,9 +179,11 @@ export default function Users() {
             {hasError ? (
                 <Alert type={"error"} message={"Error Loading Data"} />
             ) : (
-                <div className="users-table">
+                <div className={`users-table ${darkModeEnabled ? `dark-mode-bg` : ""}`}>
                     <div className="header">
-                        <h1>Users</h1>
+                        <h1 className={`${darkModeEnabled ? "dark-mode-text" : ""}`}>
+                            Users
+                        </h1>
                         <div className="search-bar">
                             <Input
                                 onChange={(event) => searchByName(event.target.value)}
@@ -190,6 +193,7 @@ export default function Users() {
                         </div>
                     </div>
                     <Table
+                        className={darkModeEnabled ? "table-style-dark" : ""}
                         scroll={{ x: true }}
                         pagination={false}
                         size={"large"}
@@ -199,6 +203,7 @@ export default function Users() {
                         bordered={true}
                     />
                     <Pagination
+                        className={darkModeEnabled ? "pagination-style-dark" : ""}
                         total={totalUsers.current}
                         pageSize={10}
                         onChange={onPageChange}
@@ -206,7 +211,12 @@ export default function Users() {
 
                     {currentRouteId && selectedUser && (
                         <div className="users-container">
-                            <User errors={validationErrors} onUpdate={saveUser} onClose={closeUserForm} user={selectedUser} />{" "}
+                            <User
+                                errors={validationErrors}
+                                onUpdate={saveUser}
+                                onClose={closeUserForm}
+                                user={selectedUser}
+                            />
                         </div>
                     )}
                 </div>

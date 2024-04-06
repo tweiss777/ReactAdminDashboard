@@ -4,6 +4,7 @@ import { UserOutlined } from "@ant-design/icons";
 import "../scss/User.scss";
 import React, { useEffect, useMemo, useRef, useState  } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useThemeContext } from "../contexts/ThemeContext";
 
 interface IProps {
   user: IUser;
@@ -43,6 +44,7 @@ export default function User({
     return `${firstName} ${lastName}`;
   }, [watchFullName]);
 
+  const { isEnabled: darkModeEnabled } = useThemeContext();
   function onEditClick(event: React.MouseEvent<HTMLElement, MouseEvent>) {
     const mode: string | undefined =
       event.currentTarget.textContent?.toLowerCase();
@@ -63,7 +65,7 @@ export default function User({
   }
   return (
     <Card
-      className="user-card"
+      className={`user-card ${darkModeEnabled? 'user-card-dark dark-mode-bg dark-mode-text': ''}`}
       title={`${fullName}`}
       extra={
         <Button onClick={onEditClick} type="primary">
