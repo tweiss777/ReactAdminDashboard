@@ -9,6 +9,7 @@ import Login from "./Components/Login";
 import ProtectedComponent from "./Components/ProtectedComponent";
 import AdminRoute from "./Components/AdminRoute";
 import NotFound from "./Components/NotFound";
+import ThemeProvider from "./contexts/ThemeContext";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -23,6 +24,7 @@ function App() {
 
   return (
     <>
+    <ThemeProvider>
       <BrowserRouter>
         {isLoggedIn && <NavBar />}
         <Routes>
@@ -61,6 +63,7 @@ function App() {
           <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
+      </ThemeProvider>
     </>
   );
 }

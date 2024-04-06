@@ -1,12 +1,14 @@
-import { Menu, type MenuProps } from "antd";
+import { Switch, Menu, type MenuProps } from "antd";
 import { useNavigate } from "react-router-dom";
 import getToken from "../utils/getToken";
 import deleteToken from "../utils/deleteToken";
 import { useAppDispatch } from "../store/storeHooks";
 import { setIsLoggedIn } from "../store/authenticationSlice";
+import { useThemeContext } from "../contexts/ThemeContext";
 export function NavBar() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { toggle } = useThemeContext()
     function navigateTo(path: string) {
         navigate(path);
     }
@@ -21,6 +23,10 @@ export function NavBar() {
 
         }
     
+    }
+
+    function onToggle(checked: boolean){
+        toggle(checked)
     }
 
     const menuItems: MenuProps["items"] = [
@@ -40,6 +46,10 @@ export function NavBar() {
             label: <span onClick={logUserOut}>Logout</span>,
             key: "logout",
         },
+        {
+            label: <span>Dark Mode<Switch onChange={onToggle} /></span>,
+            key: 'switch'
+        }
     ];
 
     return <Menu mode="horizontal" theme="dark" items={menuItems} />;

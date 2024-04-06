@@ -3,12 +3,14 @@ import { Table, Alert, Pagination } from "antd";
 import type { TableProps } from "antd";
 import { CreditLog as ICreditLog } from "../types/CreditLog";
 import { getCreditLogs, getLogCount } from "../services/creditlog.service";
+import { useThemeContext } from "../contexts/ThemeContext";
 import "../scss/Users.scss";
 export default function CreditLog() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
   const [creditLogs, setCreditLogs] = useState<ICreditLog[]>([]);
   const totalCreditLogs: React.MutableRefObject<number> = useRef<number>(0);
+  const { isEnabled: darkModeEnabled } = useThemeContext()
   useEffect(() => {
     async function fetchCreditLogs() {
       try {
@@ -58,11 +60,12 @@ export default function CreditLog() {
       {hasError ? (
         <Alert type={"error"} message={"Error Loading Data"} />
       ) : (
-        <div className="users-table">
+        <div className={`users-table ${darkModeEnabled ? `dark-mode-bg` : ""}`}>
           <div className="header">
-            <h1>Credits</h1>
+            <h1 className={`${darkModeEnabled ? "dark-mode-text" : ""}`}>Credits</h1>
           </div>
           <Table
+            className={darkModeEnabled ? "table-style-dark" : ""}
             scroll={{ x: true }}
             pagination={false}
             size={"large"}
@@ -72,6 +75,7 @@ export default function CreditLog() {
             bordered={true}
           />
           <Pagination
+            className={darkModeEnabled ? "pagination-style-dark" : ""}
             total={totalCreditLogs.current}
             pageSize={10}
             onChange={onPageChange}

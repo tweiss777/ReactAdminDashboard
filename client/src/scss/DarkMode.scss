@@ -1,0 +1,53 @@
+.dark-mode-bg {
+    background-color: #363e67;
+}
+
+.dark-mode-text {
+    color: #ffffff;
+}
+
+@mixin light {
+    background: #ffffff;
+    color: #363e67;
+}
+
+@mixin dark {
+    background: #363e67;
+    color: #ffffff;
+}
+.user-card-dark{
+    .ant-card-head-title{
+        color: #ffffff;
+    }
+}
+.table-style-dark {
+    .ant-table-thead{
+        .ant-table-cell{
+            @include dark;
+        }
+    }
+    .ant-table-container {
+        @include dark;
+        border-color: #ffffff;
+
+        .ant-table-cell-row-hover {
+            border-color: #363e67 !important;
+            @include light;
+        }
+    }
+}
+
+.pagination-style-dark {
+    .ant-pagination-item-active {
+        background-color: #363e67;
+        border-color: #ffffff;
+    }
+
+    .ant-pagination-item a {
+        color: #ffffff;
+    }
+
+    .ant-pagination-item-ellipsis {
+        color: #ffffff !important;
+    }
+}
