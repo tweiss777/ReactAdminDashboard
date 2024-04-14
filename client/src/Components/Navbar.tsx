@@ -4,7 +4,7 @@ import getToken from "../utils/getToken";
 import deleteToken from "../utils/deleteToken";
 import { useAppDispatch } from "../store/storeHooks";
 import { setIsLoggedIn } from "../store/authenticationSlice";
-import { useThemeContext } from "../contexts/ThemeContext";
+import { useThemeContext } from "../hooks/useThemeContext";
 export function NavBar() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();

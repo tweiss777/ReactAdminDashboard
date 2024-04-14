@@ -5,8 +5,9 @@ import User from "./User";
 import { Table, Alert, Input, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { TableProps } from "antd";
+
 import { useSearchParams } from "react-router-dom";
-import { useThemeContext } from "../contexts/ThemeContext";
+import { useThemeContext } from '../hooks/useThemeContext'
 import "../scss/Users.scss";
 import "../scss/DarkMode.scss";
 export default function Users() {
@@ -154,7 +155,7 @@ export default function Users() {
     ];
 
     useEffect(() => {
-        const fetchUsers = async () => {
+         const fetchUsers = async () => {
             try {
                 const [users, totalCount]: [IUser[], number] = await Promise.all([
                     getUsers(),

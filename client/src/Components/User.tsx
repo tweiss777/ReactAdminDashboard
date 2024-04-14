@@ -2,10 +2,9 @@ import { User as IUser } from "../types/Users";
 import { Card, Button, Input, Alert } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import "../scss/User.scss";
-import React, { useEffect, useMemo, useRef, useState  } from "react";
+import React, { useMemo, useRef, useState  } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useThemeContext } from "../contexts/ThemeContext";
-
+import { useThemeContext } from "../hooks/useThemeContext";
 interface IProps {
   user: IUser;
   onClose: () => void;

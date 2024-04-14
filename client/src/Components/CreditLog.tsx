@@ -3,7 +3,7 @@ import { Table, Alert, Pagination } from "antd";
 import type { TableProps } from "antd";
 import { CreditLog as ICreditLog } from "../types/CreditLog";
 import { getCreditLogs, getLogCount } from "../services/creditlog.service";
-import { useThemeContext } from "../contexts/ThemeContext";
+import { useThemeContext } from "../hooks/useThemeContext";
 import "../scss/Users.scss";
 export default function CreditLog() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
